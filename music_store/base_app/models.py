@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
 
+from utils import upload_function
+
 
 class MediaType(models.Model):
     """Медианоситель"""
@@ -23,6 +25,7 @@ class Member(models.Model):
 
     name = models.CharField(max_length=255, verbose_name="Имя музыканта")
     slug = models.SlugField()
+    image = models.ImageField(upload_to=upload_function, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -53,6 +56,7 @@ class Artist(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     members = models.ManyToManyField(Member, verbose_name="Участник", related_name="artist")
     slug = models.SlugField()
+    image = models.ImageField(upload_to=upload_function, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} | {self.genre.name}"
@@ -75,6 +79,7 @@ class Album(models.Model):
     stock = models.IntegerField(default=1, verbose_name="Наличие на складе")
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name="Цена")
     offer_of_the_week = models.BooleanField(default=False, verbose_name="Предложение недели")
+    image = models.ImageField(upload_to=upload_function)
 
     def __str__(self):
         return f"{self.id} | {self.artist.name} | {self.name}"
@@ -112,7 +117,7 @@ class Cart(models.Model):
 
     owner = models.ForeignKey("Customer", verbose_name="Покупатель", on_delete=models.CASCADE)
     products = models.ManyToManyField(
-        CartProduct, blank=True, null=True, related_name="related_cart", verbose_name="Продукты для корзины"
+        CartProduct, blank=True, related_name="related_cart", verbose_name="Продукты для корзины"
     )
     total_products = models.IntegerField(default=0, verbose_name="Общее количество товара")
     final_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name="Общая цена")
@@ -170,17 +175,17 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
 
-class Customer:
+class Customer(models.Model):
     """Покупатель"""
 
-    user = models.OneToOneField(settings.AUTH_MODEL_USER, verbose_name='Пользователь', on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name='Пользователь', on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True, verbose_name='Активный?')
     customer_orders = models.ManyToManyField(
         Order, blank=True, verbose_name='Заказы покупателя', related_name='related_customer'
     )
     wishlist = models.ManyToManyField(Album, blank=True, verbose_name='Список ожидаемого')
     phone = models.CharField(max_length=20, verbose_name='Номер телефона')
-    address = models.CharField(null=True, blank=True, verbose_name='Адрес')
+    address = models.CharField(max_length=55 ,null=True, blank=True, verbose_name='Адрес')
 
     def __str__(self):
         return f"{self.user.user_name}"
@@ -202,3 +207,20 @@ class Notification(models.Model):
     class Meta:
         verbose_name = 'Уведомление'
         verbose_name_plural = 'Уведомления'
+
+
+class ImageGallery(models.Model):
+    """Галерея изображений"""
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    image = models.ImageField(upload_to=upload_function)
+    use_in_slider = models.BooleanField(default=False)\
+
+    def __str__(self):
+        return f'изображение для {self.content_object}'
+
+    class Meta:
+        verbose_name = 'Галерея изображений'
+        verbose_name_plural = verbose_name
