@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 
 from utils import upload_function
 
@@ -216,7 +217,10 @@ class ImageGallery(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     image = models.ImageField(upload_to=upload_function)
-    use_in_slider = models.BooleanField(default=False)\
+    use_in_slider = models.BooleanField(default=False)
+
+    def image_url(self):
+        return mark_safe(f'<img src="{self.image.url}" width="auto" height="200px"')
 
     def __str__(self):
         return f'изображение для {self.content_object}'
