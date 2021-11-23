@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 from utils import upload_function
 
@@ -66,6 +67,9 @@ class Artist(models.Model):
         verbose_name = "Исполнитель"
         verbose_name_plural = "Исполнители"
 
+    def get_absolute_url(self):
+        return reverse('artist_detail', kwargs={'artist_slug': self.slug})
+
 
 class Album(models.Model):
     """Альбом исполнителя"""
@@ -88,6 +92,9 @@ class Album(models.Model):
     @property
     def ct_model(self):
         return self._meta.model_name
+
+    def get_absolute_url(self):
+        return reverse('album_detail', kwargs={'artist_slug': self.artist.slug, 'album_slug': self.slug})
 
     class Meta:
         verbose_name = "Альбом"
