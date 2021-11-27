@@ -81,7 +81,7 @@ class RegistrationView(views.View):
             Customer.objects.create(
                 user=new_user,
                 phone=form.cleaned_data['phone'],
-                address = form.cleaned_data['address']
+                address= form.cleaned_data['address']
             )
 
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])

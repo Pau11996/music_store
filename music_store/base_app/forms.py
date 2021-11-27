@@ -13,7 +13,7 @@ class LoginForm(forms.ModelForm):
         fields = ['username', 'password']
 
     def __init__(self, *args, **kwargs):
-        super.__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Логин'
         self.fields['password'].label = 'Пароль'
 
@@ -36,7 +36,7 @@ class RegistrationForm(forms.ModelForm):
     email = forms.EmailField()
 
     def __init__(self, *args, **kwargs):
-        super.__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Логин'
         self.fields['password'].label = 'Пароль'
         self.fields['confirm_password'].label = 'Подтвердите пароль'
