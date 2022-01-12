@@ -124,7 +124,7 @@ class CartProduct(models.Model):
 
     @property
     def display_name(self):
-        model_fields = MODEL_CARTPRODUCT_DISPLAY_NAME_MAP.get(self.content_object.__class__._meta.model_name.capitalizer())
+        model_fields = self.MODEL_CARTPRODUCT_DISPLAY_NAME_MAP.get(self.content_object.__class__._meta.model_name.capitalize())
         if model_fields and model_fields['is_constructable']:
             display_name = model_fields['separator'].join(
                 [operator.attrgetter(field)(self.content_object) for field in model_fields['fields']]
@@ -150,6 +150,9 @@ class Cart(models.Model):
     final_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name="Общая цена", null=True, blank=True)
     in_order = models.BooleanField(default=False)
     for_anonymous_user = models.BooleanField(default=False)
+
+    def products_in_cart(self):
+        return [c.content_object for c in self.products.all()]
 
     def __str__(self):
         return str(self.id)

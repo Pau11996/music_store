@@ -14,10 +14,11 @@ from utils import recalc_cart
 class BaseView(CartMixin, views.View):
 
     def get(self, request, *args, **kwargs):
-        albums = Album.objects.all().order_by('id')[:5]
+        albums = Album.objects.all().order_by('-id')[:5]
         context = {
             'albums': albums,
-            'cart': self.cart
+            'cart': self.cart,
+            'owner': [1, 2, 3]
         }
         return render(request, 'base.html', context)
 
