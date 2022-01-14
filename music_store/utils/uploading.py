@@ -1,6 +1,5 @@
 
-
-class ImageUploaderHelper:
+class ImageUploadHelper:
 
     FIELD_TO_COMBINE_MAP = {
         'defaults': {
@@ -51,14 +50,6 @@ class ImageUploaderHelper:
 def upload_function(instance, filename):
     if hasattr(instance, 'content_object'):
         instance = instance.content_object
-    field_to_combine, upload_postfix = ImageUploaderHelper.get_field_to_combine_and_upload_postfix(instance.__class__.__name__)
-    image = ImageUploaderHelper(field_to_combine, instance, filename, upload_postfix)
+    field_to_combine, upload_postfix = ImageUploadHelper.get_field_to_combine_and_upload_postfix(instance.__class__.__name__)
+    image = ImageUploadHelper(field_to_combine, instance, filename, upload_postfix)
     return image.path
-
-
-
-
-
-
-
-

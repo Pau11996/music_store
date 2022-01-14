@@ -215,10 +215,10 @@ class Customer(models.Model):
     )
     wishlist = models.ManyToManyField(Album, blank=True, verbose_name='Список ожидаемого')
     phone = models.CharField(max_length=20, verbose_name='Номер телефона')
-    address = models.CharField(max_length=55 ,null=True, blank=True, verbose_name='Адрес')
+    address = models.CharField(max_length=55, null=True, blank=True, verbose_name='Адрес')
 
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.user.username}"
 
     class Meta:
         verbose_name = 'Покупатель'
@@ -232,7 +232,7 @@ class Notification(models.Model):
     read = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Уведомление для {self.recipient.user.user_name} | id={self.id}"
+        return f"Уведомление для {self.recipient.user.username} | id={self.id}"
 
     class Meta:
         verbose_name = 'Уведомление'

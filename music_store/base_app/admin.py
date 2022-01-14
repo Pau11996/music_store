@@ -27,7 +27,6 @@ class ArtistAdmin(admin.ModelAdmin):
     inlines = [MembersInline, ImageGallaryInline]
     exclude = ('members',)
 
-
 admin.site.register(MediaType)
 admin.site.register(Member)
 admin.site.register(Genre)
