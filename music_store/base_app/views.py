@@ -7,11 +7,11 @@ from django.contrib.contenttypes.models import ContentType
 
 from .models import Album, Artist, Customer, CartProduct
 from .forms import LoginForm, RegistrationForm
-from .mixins import CartMixin
+from .mixins import CartMixin, NotificationsMixin
 from utils import recalc_cart
 
 
-class BaseView(CartMixin, views.View):
+class BaseView(CartMixin, NotificationsMixin, views.View):
 
     def get(self, request, *args, **kwargs):
         albums = Album.objects.all().order_by('-id')[:5]
@@ -136,7 +136,7 @@ class AddToCartView(CartMixin, views.View):
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-class DeleteCartView(CartMixin, views.View):
+class DeleteFromCartView(CartMixin, views.View):
 
     def get(self, request, *args, **kwargs):
         ct_model, product_slug = kwargs.get('ct_model'), kwargs.get('slug')

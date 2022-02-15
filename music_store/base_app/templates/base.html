@@ -53,7 +53,7 @@
             <div class="row">
                 {% for album in albums %}
                     <div class="card col-md-3 p-0 mb-3 mt-3">
-                        <img src="{{ album.image.url }}" class="card-img-top">
+                        <img src="{{ album.image.url }}" class="card-img-top ">
                         <div class="card-body text-center">
                             <h5 class="card-title"><a href="{{ album.artist.get_absolute_url }}" class="text-decoration-none">
                                 {{ album.artist.name }}
@@ -82,7 +82,7 @@
                         <div class="card-body text-center">
                             {% if request.user.is_authenticated %}
                                 {% if album.stock %}
-                                    {% if album not in cart.products.all %}
+                                    {% if album not in cart.products_in_cart %}
                                         <a href="{% url 'add_to_cart' ct_model=album.ct_model slug=album.slug %}"> <button class="btn btn-primary">
                                             Добавить в корзину</button>
                                         </a>
