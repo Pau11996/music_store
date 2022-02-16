@@ -5,6 +5,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/9c21616a01.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -33,6 +34,25 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
             </li>
+              <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Уведомления <i class="fas fa-bell"></i>
+                      <span class="badge bg-{% if notifications.count %}danger{% else %}secondary{% endif %}">
+                          {{ notifications.count }}
+                      </span>
+                  </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% if notifications %}
+                                {% for n in notifications %}
+                                    <li> <span class="dropdown-item">{{ n.text|safe }}</span></li>
+                                {% endfor %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a href="{% url 'clear-notification' %} " class="dropdown-item">Пометить все, как прочитанное</a></li>
+                            {% else %}
+                                <li><a href="#" class="dropdown-item">Нет новых уведомлений</a></li>
+                            {% endif %}
+                        </ul>
+              </li>
             {% endif %}
           </ul>
             {% if request.user.is_authenticated %}

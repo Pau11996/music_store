@@ -229,7 +229,7 @@ class Customer(models.Model):
         verbose_name = 'Покупатель'
         verbose_name_plural = 'Покупатели'
 
-class NotificationManager(models.Model):
+class NotificationManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset()
 
@@ -239,6 +239,9 @@ class NotificationManager(models.Model):
             read=False
         )
 
+    def make_all_read(self, recipient):
+        qs = self.get_queryset().filter(recipient=recipient, read=False)
+        qs.update(read=True)
 
 class Notification(models.Model):
     """Уведомление"""
@@ -275,6 +278,7 @@ class ImageGallery(models.Model):
         verbose_name = 'Галерея изображений'
         verbose_name_plural = verbose_name
 
+
 def send_notification(instance, **kwargs):
     if instance.stock:
         customers = Customer.objects.filter(
@@ -284,7 +288,7 @@ def send_notification(instance, **kwargs):
             for c in customers:
                 Notification.objects.create(
                     recipient=c,
-                    text=mark_safe(f'Позиция <a href="{instance.get_absolute_url()}"> {instance.display_name}</a>, '
+                    text=mark_safe(f'Позиция <a href="{instance.get_absolute_url()}"> {instance.name}</a>, '
                                    f'которую Вы ожидается, есть в наличии.')
                 )
                 c.wishlist.remove(instance)

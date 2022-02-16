@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.contenttypes.models import ContentType
 
-from .models import Album, Artist, Customer, CartProduct
+from .models import Album, Artist, Customer, CartProduct, Notification
 from .forms import LoginForm, RegistrationForm
 from .mixins import CartMixin, NotificationsMixin
 from utils import recalc_cart
@@ -18,7 +18,8 @@ class BaseView(CartMixin, NotificationsMixin, views.View):
         context = {
             'albums': albums,
             'cart': self.cart,
-            'owner': [1, 2, 3]
+            'owner': [1, 2, 3],
+            'notifications': self.notifications(request.user)
         }
         return render(request, 'base.html', context)
 
@@ -177,3 +178,16 @@ class AddToWishlist(views.View):
         customer = Customer.objects.get(user=request.user)
         customer.wishlist.add(album)
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class ClearNotificationsView(views.View):
+
+    @staticmethod
+    def get(request, *args, **kwargs):
+        Notification.objects.make_all_read(request.user.customer)
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+
+
+

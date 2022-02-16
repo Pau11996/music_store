@@ -12,6 +12,7 @@ from .views import (
     AddToCartView,
     ChangeQTYView,
     AddToWishlist,
+    ClearNotificationsView,
 )
 
 urlpatterns = [
@@ -22,8 +23,10 @@ urlpatterns = [
     path('cart/', CartView.as_view(), name='cart'),
 
     # общие
+    path('clear-notifications/', ClearNotificationsView.as_view(), name='clear-notification'),
     path('', BaseView.as_view(), name='base'),
     path('account/', AccountView.as_view(), name='account'),
+
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('registration/', RegistrationView.as_view(), name='registration'),
